@@ -1,39 +1,52 @@
 const listaClientes = () =>  {
     return fetch(`http://localhost:3000/profile`)
     .then(resposta => {
+      if(resposta.ok){
         return resposta.json()
+      }
+       throw new Error('Não foi possível listar os clientes. :(') 
     })
 }
 
 const removeCliente = (id) => {
     return fetch (`http://localhost:3000/profile/${id}`, {
         method: 'DELETE'
+    }).then(resposta => {
+      if(!resposta.ok){
+        throw new Error ('Não foi possível remover cliente.')
+      }
     })
 }
 
 const detalhaCliente = (id) => {
     return fetch(`http://localhost:3000/profile/${id}`)
     .then(resposta => {
+      if(resposta.ok){
         return resposta.json()
+      }
+      throw new Error ('Não foi possível detalhar cliente.')
     })
 }
 
 
-const criaClientes = (name, email) => {
-    return fetch (`http://localhost:3000/profile`, {
-      method: 'POST',
+const criaCliente = (nome, email) => { 
+  return fetch(`http://localhost:3000/profile`, {
+      method: 'POST', 
       headers: {
-        'Content-Type' : 'application/json' // APPLICATION É COM DOIS P's
+          'Content-Type' : 'application/json'
       },
       body: JSON.stringify({
-        nome: name,
-        email: email
+          nome: nome,
+          email: email
       })
-    })
-    .then( response => {
-      return response.body;
-    })
-  }
+  })
+  .then( resposta => {
+      if(resposta.ok){
+          return resposta.body
+      }
+      throw new Error('Não foi possível criar um cliente')
+  })
+}
 
 const atualizaCliente = (id, nome, email) => {
   return fetch(`http://localhost:3000/profile/${id}` , {
@@ -47,13 +60,16 @@ const atualizaCliente = (id, nome, email) => {
     })
   })
   .then(resposta => {
-    return resposta.json()
+    if(resposta.ok){
+      return resposta.json()
+    }
+    throw new Error ('Não foi possível atualizar cliente.')
   })
 }
 
 export const clienteService = { 
     listaClientes, 
-    criaClientes,
+    criaCliente,
     removeCliente,
     detalhaCliente,
     atualizaCliente
